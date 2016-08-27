@@ -8,6 +8,7 @@ class Country(models.Model):
     long_name = models.TextField()
     abbrev_name = models.CharField(max_length=2)
     has_postcode = models.BooleanField(default=True)
+    default_language = models.TextField(default='English')
 
 
 class Location(models.Model):

@@ -1,6 +1,9 @@
-from django.http import HttpResponse
-import models, utils
 import json
+
+from django.http import HttpResponse
+
+from chimesite.apps.common import models, utils
+
 
 # Create your views here.
 

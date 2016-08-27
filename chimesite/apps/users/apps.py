@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class ResourcesConfig(AppConfig):
-    name = 'resources'
+class WritersConfig(AppConfig):
+    name = 'chimesite.users'
