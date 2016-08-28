@@ -32,6 +32,8 @@ app.post('/incoming', function(req, res) {
 
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
+            
+            rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
             // get national orgs
