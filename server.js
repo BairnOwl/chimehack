@@ -7,8 +7,8 @@ var authToken = '6b7dfc77a039c8d60461a562441fdeb0';   // Your Auth Token from ww
 
 var twilio = require('twilio');
 var client = new twilio.RestClient(accountSid, authToken);
-
 var express = require('express');
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var app = express();
 
 var bodyParser = require('body-parser');
@@ -92,13 +92,18 @@ app.get('/welcome', function(request, response){
 });
 
 app.get('/list', function(request, response) {
-    var countrycode = response.countrycode;
+    //var countrycode = response.countrycode;
+    var countrycode = 91;
     var list;
-    app.get('/liststories/' + countrycode, function(req, res){
-        list = res;    
-    });
-   //var snippets = {"1": "snippet1", "2": "snippet2", "3": "snippet3"};
-    response.send(list);
+    req = new XMLHttpRequest();
+    req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
+    req.addEventListener('load', function(e){
+       if (req.status == 200){
+           var data = JSON.parse(req.responseText);
+           response.json(data);
+       } 
+    }, false);
+    req.send(null);
 });
 
 app.get('/storytext', function(req, res) {
@@ -111,23 +116,47 @@ app.get('/storytext', function(req, res) {
     res.send(storytext);
 });
 
-app.get('/similarstory', function(req, res) {
-    //make call to django app
-    var similarstory = {"1": "snippet1", "2": "snippet2", "3": "snippet3"};
-  res.send();
+app.get('/similar', function(req, res) {
+    var storyid = res.storyid; 
+    var similarlist;
+    app.get('/similarstory/' + storyid, function(req, res){
+        //may have to send only 3 stories
+        similarlist = res;
+    });
+    res.send(similarlist);
 });
 
 app.get('/matching', function(req, res) {
-    //make call to django app
-    var similarstory = {"1": "snippet1", "2": "snippet2", "3": "snippet3"};
-  res.send('Hello World!');
+    var countrycode = res.countrycode; 
+    var orglist;
+    app.get('/matchorg', function(request, response){
+        //may have to only send 3 orgs
+        orglist = response;
+    });
+    res.send(orglist);
 });
 
-app.get('/orginfo', function(req, res) {
+app.get('/org', function(req, res) {
+    var orgid = res.orgid;
+    var orginfo;
+    app.get('/orginfo', function(request, response){
+        orginfo = response;
+    });
     //make call to django app
-  res.send('Hello World!');
-});
+  res.send(orginfo);
+}); 
 
-app.listen(process.env.PORT, function () {
-    console.log('HerStory app listening on port ' + process.env.PORT);
+app.get('/localorgs', function(req, res) {
+    var orgcity = res.orgcity;
+    var orginfo;
+    app.get('/orginfo/' + orgcity, function(request, response){
+        orginfo = response;
+    });
+    //make call to django app
+  res.send(orginfo);
+}); 
+
+
+app.listen(3000, function () {
+    console.log('HerStory app listening on port ' + 3000);
 });
