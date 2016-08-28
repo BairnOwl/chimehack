@@ -16,6 +16,14 @@ def handle_url(input_request):
     last_item = split_path[-1]
     return last_item
 
+def handle_query_url(input_request):
+    print 'got path ' + input_request.path
+    print 'got meta ' + str(input_request.META)
+    query_str = input_request.META['QUERY_STRING']
+    split_query = query_str.split('&')
+    key_value = [q.split('=') for q in split_query]
+    return key_value
+
 def to_three(in_set):
     if len(in_set) > 3:
         in_set = random.sample(in_set, 3)
