@@ -24,7 +24,9 @@ app.post('/incoming', function(req, res) {
     console.log(message);
 
     if (!isNaN(message)) {
+        console.log("valid message");
         if (message == 'her') {
+            console.log("in her");
             sendIntroMessage(phoneNumber);
         }
 
