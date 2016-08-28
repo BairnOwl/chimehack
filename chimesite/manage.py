@@ -3,9 +3,6 @@ import os
 import sys
 
 if __name__ == "__main__":
-    # base = os.path.abspath(os.path.dirname(__file__))
-    # sys.path.append(os.path.join(base, 'apps'))
-    print sys.path
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chimesite.settings")
     try:
         from django.core.management import execute_from_command_line

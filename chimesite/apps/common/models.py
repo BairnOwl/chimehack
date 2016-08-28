@@ -10,8 +10,8 @@ class Country(models.Model):
     has_postcode = models.BooleanField(default=True)
     default_language = models.TextField(default='English')
 
-    class Meta():
-        app_label = 'Country Record'
+    def __unicode__(self):
+        return self.long_name
 
 
 class Location(models.Model):
@@ -24,3 +24,9 @@ class Location(models.Model):
 
     def uses_zip(self):
         return self.country.has_postcode
+
+    def __unicode__(self):
+        if self.uses_zip():
+            return '%s: %s, %s' % (str(self.country), self.city, self.postal_code)
+        else:
+            return '%s: %s, %s' % (str(self.country), self.state, self.city)
