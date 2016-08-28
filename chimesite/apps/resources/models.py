@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-from chimesite.apps.common import Location
+from apps.common.models import Location
 
 # Create your models here.
 

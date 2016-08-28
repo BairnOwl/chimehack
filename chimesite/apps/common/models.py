@@ -10,6 +10,9 @@ class Country(models.Model):
     has_postcode = models.BooleanField(default=True)
     default_language = models.TextField(default='English')
 
+    class Meta():
+        app_label = 'Country Record'
+
 
 class Location(models.Model):
 

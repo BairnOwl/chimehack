@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-from chimesite.apps.users.models import Author
+from apps.users.models import Author
 
 # Create your models here.
 
