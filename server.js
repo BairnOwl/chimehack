@@ -122,7 +122,7 @@ function getStoryText(storyid) {
         var storyid = storyid;
         var storytext = "";
         req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/TO DO FILL OUT/', true);
+        req.open('GET', 'http://127.0.0.1:8000/stories/single/' + storyid, true);
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
