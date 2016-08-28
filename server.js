@@ -224,6 +224,18 @@ function getOrgsInCity(city) {
     });
 }
 
+function getEmergencyNumber(phone){
+	var countrycode = phone;
+	
+	return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/basic/emergency/' + orgcity, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
+    });
+}
+
 app.listen(process.env.PORT, function () {
     console.log('HerStory app listening on port ' + process.env.PORT);
 });
