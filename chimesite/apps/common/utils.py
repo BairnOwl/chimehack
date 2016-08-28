@@ -7,9 +7,14 @@ class ContentException(Exception):
 def handle_json(input_request):
     json_str = input_request.body
     try:
-        json.dumps(json_str)
+        return json.dumps(json_str)
     except Exception as e:
         raise ContentException('Could not parse content with error %s' % e)
+
+def handle_url(input_request):
+    split_path = input_request.path.split('/')
+    last_item = split_path[-1]
+    return last_item
 
 def to_three(in_set):
     if len(in_set) > 3:
