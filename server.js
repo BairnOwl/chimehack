@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
-    var message = isNaN(parseInt(req.body.Body)) ? str.toLowerCase(req.body.Body) : parseInt(req.body.Body);
+    var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
 
     console.log(message);
 
