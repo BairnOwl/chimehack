@@ -51,10 +51,12 @@ app.get('/welcome', function(request, response){
     response.send(welcomejson);
 });
 
-app.get('/list', function(request, response) {
-    var countrycode = response.countrycode;
+app.get('list', function(request, response) {
+    //var countrycode = response.countrycode;
+    var countrycode = 91;
     var list;
-    app.get('/liststories/' + countrycode, function(req, res){
+    app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res){
+        console.log("response " + res);
         list = res;    
     });
    //var snippets = {"1": "snippet1", "2": "snippet2", "3": "snippet3"};
