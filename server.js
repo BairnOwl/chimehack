@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var request = require('request');
+var Promise = require('promise');
 
 var userStates = {};
 
@@ -33,7 +34,9 @@ app.post('/incoming', function(req, res) {
 
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
-            var stories = getStoryList(91);
+            getStoryList(91).then(function(val) {
+                console.log(val)
+            });
             console.log(stories);
             rememberUserState(phoneNumber, 'stories');
 
@@ -83,18 +86,18 @@ function sendCityRequestMessage(phoneNumber) {
     });
 }
 
-console.log(getStoryList(91));
-
 function getStoryList(phone) {
     var countrycode = phone;
 
-    request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
-        if (!error && res.statusCode == 200) {
-            console.log(body);
-            return body;
-        }
+    return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
     });
 }
+
 
 function getStoryText(storyid) {
     app.get('/storytext', function(req, res) {
@@ -175,4 +178,8 @@ function getOrgsInCity(city) {
 
 app.listen(process.env.PORT, function () {
     console.log('HerStory app listening on port ' + process.env.PORT);
+});
+
+getStoryList(91).then(function(val) {
+    console.log(val)
 });
