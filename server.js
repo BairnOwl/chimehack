@@ -23,7 +23,6 @@ var userStates = {};
 
 // Twilio interface
 
-getStoryList(91);
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
     var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
@@ -33,7 +32,7 @@ app.post('/incoming', function(req, res) {
         rememberUserState(phoneNumber, 'intro');
     }
 
-    if (isNaN(message) && message == 0) {
+    if (!isNaN(message) && message == 0) {
         sendIntroMessage(phoneNumber);
         rememberUserState(phoneNumber, 'intro');
     }
@@ -57,26 +56,34 @@ app.post('/incoming', function(req, res) {
     }
 
     if (getUserState(phoneNumber) == 'resources') {
-        getOrgsInCity(message);
+        getOrgsInCity(message).then(function(val) {
+            sendOrgsInCityMessage(val);
+        });
         rememberUserState('resourceList');
     }
 
     if (getUserState(phoneNumber) == 'resourceList') {
-        if (isNaN(message)) {
-            getOrgAdditional(message);
+        if (!isNaN(message)) {
+            getOrgAdditional(message).then(function(val) {
+                sendOrgAdditionalMessage(val);
+            });
         }
     }
 
     if (getUserState(phoneNumber) == 'stories') {
-        if (isNaN(message)) {
-            getStoryText(message);
+        if (!isNaN(message)) {
+            getStoryText(message).then(function(val) {
+                sendStoryTextMessage(val);
+            });
             rememberUserState('storyDetail');
         }
     }
 
     if (getUserState(phoneNumber) == 'storyDetail') {
-        if (isNaN(message)) {
-            getSimilarStory(message);
+        if (!isNaN(message)) {
+            getSimilarStory(message).then(function(val) {
+                sendSimilarStoryMessage(val);
+            });
         }
     }
 });
@@ -91,17 +98,19 @@ function getUserState(phoneNumber) {
 
 function sendIntroMessage(phoneNumber) {
 	getEmergencyNumber(phoneNumber).then(function(number) {
-			client.messages.create({
-			body: 'Im here to help. If this is an emergency or you are not safe, dial this emergency number ' + number,
-			to: phoneNumber,
-			from: '+14017533904'
-		}, function(err, message) {
-			if (err) {
-				console.error(err.message);
-			}
-		});
+        client.messages.create({
+            body: 'I\'m here to help. If this is an emergency or you are not safe, dial this emergency number ' + number,
+            to: phoneNumber,
+            from: '+14017533904'
+        }, function(err, message) {
+            if (err) {
+                console.error(err.message);
+            }
+        });
+
 		client.messages.create({
-			body: 'I want you to know you are not alone. I wont share any personal information that you give me. Other women have gone through this...\nPress\n(1) to read their stories\n(2) to find local resources',
+			body: 'I want you to know you are not alone. I wont share any personal information that you give me. Other women have gone through this...\n' +
+            'Press [1] to read their stories\nPress [2] to see a list of local resources\n**If this phone is not private, please delete these messages for your own protection.',
 			to: phoneNumber,
 			from: '+14017533904'
 		}, function(err, message) {
@@ -152,13 +161,67 @@ function sendMatchingOrgMessage(phoneNumber, list) {
     }
 }
 
+function sendOrgsInCityMessage(phoneNumber, list) {
+    for (var key in list) {
+        client.messages.create({
+            body: list[key],
+            to: phoneNumber,
+            from: '+14017533904'
+        }, function (err, message) {
+            if (err) {
+                console.error(err.message);
+            }
+        });
+    }
+}
+
+function sendOrgAdditionalMessage(phoneNumber, org) {
+    client.messages.create({
+        body: org,
+        to: phoneNumber,
+        from: '+14017533904'
+    }, function (err, message) {
+        if (err) {
+            console.error(err.message);
+        }
+    });
+
+}
+
+function sendStoryTextMessage(phoneNumber, story) {
+    client.messages.create({
+        body: story + '\nWhat would you like to do now?\nPress [1] to hear another story\nPress [2] to message ' +
+        'the person in the story\nPress [3] to see a list of local resources',
+        to: phoneNumber,
+        from: '+14017533904'
+    }, function (err, message) {
+        if (err) {
+            console.error(err.message);
+        }
+    });
+
+}
+
+function sendSimilarStoryMessage(phoneNumber, story) {
+    client.messages.create({
+        body: story,
+        to: phoneNumber,
+        from: '+14017533904'
+    }, function (err, message) {
+        if (err) {
+            console.error(err.message);
+        }
+    });
+
+}
+
 function getStoryList(phone) {
     var countrycode = phone;
 
     console.log(countrycode);
 
     return new Promise(function(resolve, reject) {
-        request('http://localhost:8000/stories/list/' + countrycode, function(error, res, body) {
+        request('http://chimehack-herstory.appspot.com/stories/list/' + countrycode, function(error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -177,7 +240,7 @@ function getStoryText(storyid) {
     var storytext = "";
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/stories/single/' + storyid, function (error, res, body) {
+        request('http://chimehack-herstory.appspot.com/stories/single/' + storyid, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -191,7 +254,7 @@ function getSimilarStory(storyid) {
     var storytext = "";
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/stories/similar/' + storyid, function(error, res, body) {
+        request('http://chimehack-herstory.appspot.com/stories/similar/' + storyid, function(error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -203,7 +266,7 @@ function getMatchingOrg(phone) {
     var countrycode = phone;
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/matchorg/?country=' + countrycode, function (error, res, body) {
+        request('http://chimehack-herstory.appspot.com/resources/matchorg/?country=' + countrycode, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -215,7 +278,7 @@ function getOrgAdditional(orgid) {
     var id = orgid;
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/info/' + id, function (error, res, body) {
+        request('http://chimehack-herstory.appspot.com/resources/info/' + id, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -227,7 +290,7 @@ function getOrgsInCity(city) {
     var orgcity = city;
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/matchorg/?city=' + orgcity, function (error, res, body) {
+        request('http://chimehack-herstory.appspot.com/resources/matchorg/?city=' + orgcity, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -236,10 +299,9 @@ function getOrgsInCity(city) {
 }
 
 function getEmergencyNumber(phone){
-	var countrycode = phone;
 	
 	return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/basic/emergency/' + orgcity, function (error, res, body) {
+        request('http://chimehack-herstory.appspot.com/basic/emergency/' + phone, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
