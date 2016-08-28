@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
-    var message = parseInt(req.body.Body);
+    var message = req.body.Body;
 
     console.log(message);
 
