@@ -34,7 +34,9 @@ def get_story(request):
 
 def get_similar(request):
     matching_story = _retrieve_story(request)
-    by_primary = utils.filter_down(matching_story, primary_keyword, matching_story.primary_keyword)
-    by_secondary = utils.filter_down(matching_story, secondary_keyword, matching_story.secondary_keyword)
-    by_tertiary = utils.filter_down(matching_story, tertiary_keyword, matching_story.tertiary_keyword)
-    return story_dump(by_tertiary)
+    filtered_stories = SimpleStory.objects.filter(primary_keyword=matching_story.primary_keyword)
+    if len(filtered_stories) > 3 and matching_story.secondary_keyword:
+        filtered_stories = by_primary.filter(secondary_keyword=matching_story.secondary_keyword)
+        if len(filtered_stories) > 3 and matching_story.tertiary_keyword:
+            filtered_stories = by_secondary.filter(tertiary_keyword=matching_story.tertiary_keyword)
+    return story_dump(filtered_stories)
