@@ -29,7 +29,6 @@ app.post('/incoming', function(req, res) {
     if (message == 'her') {
         sendIntroMessage(phoneNumber);
         rememberUserState(phoneNumber, 'intro');
-
     }
 
     if (getUserState(phoneNumber) == 'intro') {
@@ -89,6 +88,7 @@ function getStoryList(phone) {
 
     request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
         if (!error && res.statusCode == 200) {
+            console.log(body);
             return body;
         }
     });
