@@ -11,11 +11,12 @@ def story_dump(stories):
     return HttpResponse(json.dumps(story_dump))
 
 def list_stories(request):
-    in_dict = utils.handle_json(request)
-    country_code = in_dict.get('country_code', None)
-    if country_code is None:
+    in_code = utils.handle_url(request)
+    try:
+        country_code = int(in_code)
+    except:
         return HttpResponse('Could not get country code.')
-    country_stories = SimpleStory.objects.filter(location__country__phone_code=country_code)
+    country_stories = SimpleStory.objects.filter(location__phone_code=country_code)
     return story_dump(country_stories)
 
 def _retrieve_story(request):
