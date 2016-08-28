@@ -37,7 +37,7 @@ app.post('/incoming', function(req, res) {
             getStoryList(91).then(function(val) {
                 console.log(val)
             });
-            console.log(stories);
+
             rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
