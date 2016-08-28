@@ -89,6 +89,7 @@ function sendCityRequestMessage(phoneNumber) {
 function getStoryList(phone) {
     app.get('/list', function(request, response) {
         var countrycode = phone;
+        console.log(countrycode);
         req = new XMLHttpRequest();
         req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
         req.addEventListener('load', function(e) {
