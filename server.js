@@ -174,4 +174,3 @@ function getOrgsInCity(city) {
 app.listen(process.env.PORT, function () {
     console.log('HerStory app listening on port ' + process.env.PORT);
 });
-
