@@ -9,7 +9,6 @@ class Country(models.Model):
     abbrev_name = models.CharField(max_length=2)
     default_language = models.TextField(default='English')
     phone_code = models.IntegerField()
-    emergency_number = models.IntegerField()
 
     def __unicode__(self):
         return self.long_name

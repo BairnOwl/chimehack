@@ -25,15 +25,11 @@ def _retrieve_story(request):
         story = SimpleStory.objects.get(id=story_id)
         return story
     except:
-        raise Exception('No story matching the given id exists')
+        return HttpResponse('No story matching the given id exists.')
 
 def get_story(request):
     story = _retrieve_story(request)
-    with_author = {'story_text': story}
-    if story.author:
-        with_author['author_name'] = story.author.alias_name
-        with_author['author_phone'] = story.author.callback_number
-    return HttpResponse(json.dumps(with_author))
+    return HttpResponse(story.story_text)
 
 
 def get_similar(request):
