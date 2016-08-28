@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.common.models import Country
+from .models import Country
 
 # Register your models here.
 

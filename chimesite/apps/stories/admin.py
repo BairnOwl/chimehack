@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SimpleStory
+from chimesite.apps.stories.models import SimpleStory
 
 # Register your models here.
 
