@@ -16,7 +16,12 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+var request = require('request');
+
 var userStates = {};
+
+getStoryList(91);
+
 // Twilio interface
 
 app.post('/incoming', function(req, res) {
@@ -89,9 +94,10 @@ function getStoryList(phone) {
 
     console.log(phone);
 
-    app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res) {
-        console.log(res);
-        res.send();
+    request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
+        if (!error && res.statusCode == 200) {
+            console.log(body) // Print the google web page.
+        }
     });
 
     // var req = new XMLHttpRequest();
