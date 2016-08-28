@@ -29,7 +29,7 @@ def get_org_info(request):
     if key is None:
         return HttpResponse("No organization key was given.")
     try:
-        org_obj = Organization.objects.get(id=key)
+        org_obj = Organization.objects.get(id=int(key))
     except Exception:
         return HttpResponse("Could not get an organization with this key.")
     info_dump = json.dumps({u'name': org_obj.name,
