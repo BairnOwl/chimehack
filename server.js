@@ -15,6 +15,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+var userStates = {};
 // Twilio interface
 
 app.post('/incoming', function(req, res) {
@@ -25,14 +26,52 @@ app.post('/incoming', function(req, res) {
 
     if (message == 'her') {
         sendIntroMessage(phoneNumber);
+        rememberUserState(phoneNumber, 'intro');
+
     }
 
+    if (getUserState(phoneNumber) == 'intro') {
+        if (message == 1) {
+
+        } else if (message == 2) {
+            // get national orgs
+            sendCityRequestMessage(phoneNumber);
+            rememberUserState(phoneNumber, 'resources');
+        }
+    }
+
+    if (getUserState(phoneNumber) == 'resources') {
+        // get local orgs
+        
+    }
+
+
 });
+
+function rememberUserState(phoneNumber, state) {
+    userStates[phoneNumber] = state;
+}
+
+function getUserState(phoneNumber) {
+    return userStates[phoneNumber];
+}
 
 function sendIntroMessage(phoneNumber) {
     client.messages.create({
         body: 'I\'m here to help. I won\'t share any personal information that you share with me. ' +
         'Other women have gone through this.\nPress\n(1) to read their stories\n(2) to find local resources',
+        to: phoneNumber,
+        from: '+14017533904'
+    }, function (err, message) {
+        if (err) {
+            console.error(err.message);
+        }
+    });
+}
+
+function sendCityRequestMessage(phoneNumber) {
+    client.messages.create({
+        body: 'Can you please tell me what city you are in so I can find you local resources? I won’t share this with anyone.',
         to: phoneNumber,
         from: '+14017533904'
     }, function (err, message) {
