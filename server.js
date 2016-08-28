@@ -16,7 +16,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+var request = require('request');
+
 var userStates = {};
+
 // Twilio interface
 
 getStoryList(91);
@@ -33,7 +36,7 @@ app.post('/incoming', function(req, res) {
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
             var stories = getStoryList(91);
-            //console.log(stories);
+            console.log(stories);
             rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
@@ -47,8 +50,6 @@ app.post('/incoming', function(req, res) {
         // get local orgs
         
     }
-
-
 });
 
 function rememberUserState(phoneNumber, state) {
@@ -84,31 +85,13 @@ function sendCityRequestMessage(phoneNumber) {
     });
 }
 
-
 function getStoryList(phone) {
     var countrycode = phone;
-
-    console.log(phone);
-    
-    
-
-    app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res) {
-        console.log("in django")
-        console.log(res);
-        req.send("hello world");
+    request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
+        if (!error && res.statusCode == 200) {
+            return body;
+        }
     });
-
-    // var req = new XMLHttpRequest();
-    // req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
-    // req.addEventListener('load', function(e) {
-    //     if (req.status == 200) {
-    //         var data = JSON.parse(req.responseText);
-    //         console.log(data);
-    //
-    //         return data;
-    //     }
-    // }, false);
-    // req.send(null);
 }
 
 app.use(function(err, req, res, next) {
@@ -118,64 +101,40 @@ app.use(function(err, req, res, next) {
 })
 
 function getStoryText(storyid) {
-    app.get('/storytext', function(req, res) {
-        var storyid = storyid;
-        var storytext = "";
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/single/' + storyid, true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return data;
-            }
-        }, false);
-        req.send(null);
+    var storyid = storyid;
+    var storytext = "";
+    request('http://127.0.0.1:8000/stories/single/' + storyid, function(error, res, body) {
+        if (!error && res.statusCode == 200) {
+            return body;
+        }
     });
 }
 
 function getSimilarStory(storyid) {
-    app.get('/similar', function(req, res) {
-        var storyid = storyid;
-        var storytext = "";
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/SIMILAR STORY/', true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return data;
-            }
-        }, false);
-        req.send(null);
+    var storyid = storyid;
+    var storytext = "";    
+    request('http://127.0.0.1:8000/stories/similar/' + storyid, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
     });
 }
 
 function getMatchingOrg(phone) {
-    app.get('/matching', function(req, res) {
-        var countrycode = phone;
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/MATCH ORG/', true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return data;
-            }
-        }, false);
-        req.send(null);
+    var countrycode = phone;
+    request('http://127.0.0.1:8000/resources/matchorg/' + countrycode, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
     });
 }
 
 function getOrgAdditional(orgid) {
-    app.get('/org', function(req, res) {
-        var orgid = orgid;
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/ORG INFO/', true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return data;
-            }
-        }, false);
-        req.send(null);
+    var id = orgid;
+    request('http://127.0.0.1:8000/resources/orginfo/' + id, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
     });
 }
 
@@ -183,7 +142,7 @@ function getOrgsInCity(city) {
     app.get('/localorgs', function(req, res) {
         var orgcity = city;
         req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/LOCAL ORGS/', true);
+        req.open('GET', 'http://127.0.0.1:8000/resources/LOCAL ORGS/', true);
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);

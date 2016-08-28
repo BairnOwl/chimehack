@@ -6,7 +6,7 @@ import random
 
 
 def get_organization(request):
-    country_val = utils.handle_json(request)
+    country_val = utils.handle_url(request)
     if country_val is None:
         return HttpResponse('No country was given.')
     by_country = utils.filter_down(Organization.objects,
@@ -24,7 +24,7 @@ def get_organization(request):
 
 
 def get_org_info(request):
-    key = utils.handle_json(request)
+    key = utils.handle_url(request)
     if key is None:
         return HttpResponse("No organization key was given.")
     try:
