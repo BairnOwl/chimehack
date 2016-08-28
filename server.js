@@ -12,7 +12,7 @@ app.listen(3000, function () {
     console.log('HerStory app listening on port ' + 3000);
 });
 
-app.get('/', function(request, response){
+app.get('/home', function(request, response){
    response.send("hellooooooooo world"); 
 });
 
