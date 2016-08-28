@@ -157,13 +157,7 @@ function getStoryList(phone) {
 
     console.log(countrycode);
 
-    return new Promise(function(resolve, reject) {
-        request('http://localhost:8000/stories/list/' + countrycode, function(error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
+    return {"1": "She was beaten by her husband but strangers helped her divorce and find shelter\u2026", "3": "She almost lost both her children to domestic violence but NGOs helped her divorce and get custody", "4": "She was raped by a stranger and her husband stood by her\u2026"};
 }
 
 app.use(function(err, req, res, next) {
@@ -201,38 +195,15 @@ function getSimilarStory(storyid) {
 
 function getMatchingOrg(phone) {
     var countrycode = phone;
-
-    return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/matchorg/?country=' + countrycode, function (error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
+    return {"1": ["9122266244", "Society for Nutrition, Education & Health Action"], "2": ["9164684742", "Apne Aap"]};
 }
 
 function getOrgAdditional(orgid) {
-    var id = orgid;
-
-    return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/info/' + id, function (error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
+    return {"phone_number": "9122266244", "services": "Legal, counseling", "description": "Provides a safe space, free legal counseling, emotional counseling", "name": "Society for Nutrition, Education & Health Action", "location": ""};
 }
 
 function getOrgsInCity(city) {
-    var orgcity = city;
-
-    return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/matchorg/?city=' + orgcity, function (error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
+    return {"1": ["9122266244", "Society for Nutrition, Education & Health Action"], "2": ["9164684742", "Apne Aap"]};
 }
 
 function getEmergencyNumber(phone){
