@@ -91,6 +91,7 @@ function getStoryList(phone) {
 
     app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res) {
         console.log(res);
+        res.send();
     });
 
     // var req = new XMLHttpRequest();
