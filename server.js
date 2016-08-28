@@ -20,8 +20,6 @@ var request = require('request');
 
 var userStates = {};
 
-getStoryList(91);
-
 // Twilio interface
 
 app.post('/incoming', function(req, res) {
@@ -37,7 +35,7 @@ app.post('/incoming', function(req, res) {
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
             var stories = getStoryList(91);
-            //console.log(stories);
+            console.log(stories);
             rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
@@ -51,8 +49,6 @@ app.post('/incoming', function(req, res) {
         // get local orgs
         
     }
-
-
 });
 
 function rememberUserState(phoneNumber, state) {
@@ -88,29 +84,14 @@ function sendCityRequestMessage(phoneNumber) {
     });
 }
 
-
 function getStoryList(phone) {
     var countrycode = phone;
 
-    console.log(phone);
-
     request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
         if (!error && res.statusCode == 200) {
-            console.log(body) // Print the google web page.
+            return body;
         }
     });
-
-    // var req = new XMLHttpRequest();
-    // req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
-    // req.addEventListener('load', function(e) {
-    //     if (req.status == 200) {
-    //         var data = JSON.parse(req.responseText);
-    //         console.log(data);
-    //
-    //         return data;
-    //     }
-    // }, false);
-    // req.send(null);
 }
 
 function getStoryText(storyid) {
