@@ -23,8 +23,6 @@ app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
     var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
 
-    console.log(message);
-
     if (message == 'her') {
         sendIntroMessage(phoneNumber);
         rememberUserState(phoneNumber, 'intro');
@@ -34,7 +32,7 @@ app.post('/incoming', function(req, res) {
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
             var stories = getStoryList(91);
-            console.log(stories);
+            //console.log(stories);
             rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
@@ -87,21 +85,19 @@ function sendCityRequestMessage(phoneNumber) {
 
 
 function getStoryList(phone) {
-    app.get('/list', function(request, response) {
-        var countrycode = phone;
-        console.log(countrycode);
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                console.log(data);
+    var countrycode = phone;
+    console.log(countrycode);
+    req = new XMLHttpRequest();
+    req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
+    req.addEventListener('load', function(e) {
+        if (req.status == 200) {
+            var data = JSON.parse(req.responseText);
+            console.log(data);
 
-                return data;
-            }
-        }, false);
-        req.send(null);
-    });
+            return data;
+        }
+    }, false);
+    req.send(null);
 }
 
 function getStoryText(storyid) {
