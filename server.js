@@ -19,12 +19,11 @@ app.use(bodyParser.json());
 
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
-    var message = req.body.Body;
+    var message = isNaN(parseInt(req.body.Body)) ? str.toLowerCase(req.body.Body) : parseInt(req.body.Body);
 
     console.log(message);
 
     if (message == 'her') {
-        console.log("in her");
         sendIntroMessage(phoneNumber);
     }
 
