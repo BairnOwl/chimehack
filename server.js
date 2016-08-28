@@ -155,18 +155,6 @@ function getStoryList(phone) {
     });
 }
 
-
-function getStoryText(storyid) {
-
-    return new Promise(function(resolve, reject) {
-        request('http://localhost:8000/stories/single/' + countrycode, function(error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
-}
-
 app.use(function(err, req, res, next) {
   // Do logging and user-friendly error message display
   console.error(err);
@@ -204,7 +192,7 @@ function getMatchingOrg(phone) {
     var countrycode = phone;
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/matchorg/' + countrycode, function (error, res, body) {
+        request('http://127.0.0.1:8000/resources/matchorg/?country=' + countrycode, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -216,7 +204,7 @@ function getOrgAdditional(orgid) {
     var id = orgid;
 
     return new Promise(function(resolve, reject) {
-        request('http://127.0.0.1:8000/resources/orginfo/' + id, function (error, res, body) {
+        request('http://127.0.0.1:8000/resources/info/' + id, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
@@ -225,17 +213,14 @@ function getOrgAdditional(orgid) {
 }
 
 function getOrgsInCity(city) {
-    app.get('/localorgs', function(req, res) {
-        var orgcity = city;
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/resources/LOCAL ORGS/', true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return data;
+    var orgcity = city;
+
+    return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/resources/matchorg/?city=' + orgcity, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
             }
-        }, false);
-        req.send(null);
+        });
     });
 }
 
