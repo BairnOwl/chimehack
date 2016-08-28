@@ -176,112 +176,51 @@ app.use(function(err, req, res, next) {
 function getStoryText(storyid) {
     var storyid = storyid;
     var storytext = "";
-    request('http://127.0.0.1:8000/stories/single/' + storyid, function(error, res, body) {
-        if (!error && res.statusCode == 200) {
-            return body;
-        }
-    });
 
-    // app.get('/storytext', function(req, res) {
-    //     var storyid = storyid;
-    //     var storytext = "";
-    //     req = new XMLHttpRequest();
-    //     req.open('GET', 'http://127.0.0.1:8000/stories/TO DO FILL OUT/', true);
-    //     req.addEventListener('load', function(e) {
-    //         if (req.status == 200) {
-    //             var data = JSON.parse(req.responseText);
-    //             return data;
-    //         }
-    //     }, false);
-    //     req.send(null);
-    // });
+    return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/stories/single/' + storyid, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
+    });
 }
 
 function getSimilarStory(storyid) {
 
-    // app.get('/similar', function(req, res) {
-    //     var storyid = storyid;
-    //     var storytext = "";
-    //     req = new XMLHttpRequest();
-    //     req.open('GET', 'http://127.0.0.1:8000/stories/SIMILAR STORY/', true);
-    //     req.addEventListener('load', function(e) {
-    //         if (req.status == 200) {
-    //             var data = JSON.parse(req.responseText);
-    //             return data;
-    //         }
-    //     }, false);
-    //     req.send(null);
-    // });
-}
-
-function getMatchingOrg(phone) {
-    // app.get('/matching', function(req, res) {
-    //     var countrycode = phone;
-    //     req = new XMLHttpRequest();
-    //     req.open('GET', 'http://127.0.0.1:8000/stories/MATCH ORG/', true);
-    //     req.addEventListener('load', function(e) {
-    //         if (req.status == 200) {
-    //             var data = JSON.parse(req.responseText);
-    //             return data;
-    //         }
-    //     }, false);
-    //     req.send(null);
-    // });
-}
-
-function getOrgAdditional(orgid) {
-    // app.get('/org', function(req, res) {
-    //     var orgid = orgid;
-    //     req = new XMLHttpRequest();
-    //     req.open('GET', 'http://127.0.0.1:8000/stories/ORG INFO/', true);
-    //     req.addEventListener('load', function(e) {
-    //         if (req.status == 200) {
-    //             var data = JSON.parse(req.responseText);
-    //             return data;
-    //         }
-    //     }, false);
-    //     req.send(null);
-    // });
-}
-
-function getOrgsInCity(city) {
-    // app.get('/localorgs', function(req, res) {
-    //     var orgcity = city;
-    //     req = new XMLHttpRequest();
-    //     req.open('GET', 'http://127.0.0.1:8000/stories/LOCAL ORGS/', true);
-    //     req.addEventListener('load', function(e) {
-    //         if (req.status == 200) {
-    //             var data = JSON.parse(req.responseText);
-    //             return data;
-    //         }
-    //     }, false);
-    //     req.send(null);
-    // });
-
     var storyid = storyid;
-    var storytext = "";    
-    request('http://127.0.0.1:8000/stories/similar/' + storyid, function(error, res, body) {
-    if (!error && res.statusCode == 200) {
-        return body;
-        }
+    var storytext = "";
+
+    return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/stories/similar/' + storyid, function(error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
     });
 }
 
 function getMatchingOrg(phone) {
     var countrycode = phone;
-    request('http://127.0.0.1:8000/resources/matchorg/' + countrycode, function(error, res, body) {
-    if (!error && res.statusCode == 200) {
-        return body;
-        }
+
+    return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/resources/matchorg/' + countrycode, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
     });
 }
 
 function getOrgAdditional(orgid) {
     var id = orgid;
-    request('http://127.0.0.1:8000/resources/orginfo/' + id, function(error, res, body) {
-    if (!error && res.statusCode == 200) {
-        return body;
-        }
+
+    return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/resources/orginfo/' + id, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
     });
 }
 
