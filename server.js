@@ -23,6 +23,7 @@ var userStates = {};
 
 // Twilio interface
 
+getStoryList(91);
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
     var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
@@ -164,6 +165,22 @@ function getStoryText(storyid) {
             }
         });
     });
+}
+
+app.use(function(err, req, res, next) {
+  // Do logging and user-friendly error message display
+  console.error(err);
+  res.status(500).send({status:500, message: 'internal error', type:'internal'}); 
+});
+
+function getStoryText(storyid) {
+    var storyid = storyid;
+    var storytext = "";
+    request('http://127.0.0.1:8000/stories/single/' + storyid, function(error, res, body) {
+        if (!error && res.statusCode == 200) {
+            return body;
+        }
+    });
 
     // app.get('/storytext', function(req, res) {
     //     var storyid = storyid;
@@ -181,6 +198,7 @@ function getStoryText(storyid) {
 }
 
 function getSimilarStory(storyid) {
+
     // app.get('/similar', function(req, res) {
     //     var storyid = storyid;
     //     var storytext = "";
@@ -239,6 +257,47 @@ function getOrgsInCity(city) {
     //     }, false);
     //     req.send(null);
     // });
+
+    var storyid = storyid;
+    var storytext = "";    
+    request('http://127.0.0.1:8000/stories/similar/' + storyid, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
+    });
+}
+
+function getMatchingOrg(phone) {
+    var countrycode = phone;
+    request('http://127.0.0.1:8000/resources/matchorg/' + countrycode, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
+    });
+}
+
+function getOrgAdditional(orgid) {
+    var id = orgid;
+    request('http://127.0.0.1:8000/resources/orginfo/' + id, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
+    });
+}
+
+function getOrgsInCity(city) {
+    app.get('/localorgs', function(req, res) {
+        var orgcity = city;
+        req = new XMLHttpRequest();
+        req.open('GET', 'http://127.0.0.1:8000/resources/LOCAL ORGS/', true);
+        req.addEventListener('load', function(e) {
+            if (req.status == 200) {
+                var data = JSON.parse(req.responseText);
+                return data;
+            }
+        }, false);
+        req.send(null);
+    });
 }
 
 app.listen(process.env.PORT, function () {

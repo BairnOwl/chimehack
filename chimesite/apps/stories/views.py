@@ -25,16 +25,22 @@ def _retrieve_story(request):
         story = SimpleStory.objects.get(id=story_id)
         return story
     except:
-        return HttpResponse('No story matching the given id exists.')
+        raise Exception('No story matching the given id exists')
 
 def get_story(request):
     story = _retrieve_story(request)
-    return HttpResponse(story.story_text)
+    with_author = {'story_text': story}
+    if story.author:
+        with_author['author_name'] = story.author.alias_name
+        with_author['author_phone'] = story.author.callback_number
+    return HttpResponse(json.dumps(with_author))
 
 
 def get_similar(request):
     matching_story = _retrieve_story(request)
-    by_primary = utils.filter_down(matching_story, primary_keyword, matching_story.primary_keyword)
-    by_secondary = utils.filter_down(matching_story, secondary_keyword, matching_story.secondary_keyword)
-    by_tertiary = utils.filter_down(matching_story, tertiary_keyword, matching_story.tertiary_keyword)
-    return story_dump(by_tertiary)
+    filtered_stories = SimpleStory.objects.filter(primary_keyword=matching_story.primary_keyword)
+    if len(filtered_stories) > 3 and matching_story.secondary_keyword:
+        filtered_stories = by_primary.filter(secondary_keyword=matching_story.secondary_keyword)
+        if len(filtered_stories) > 3 and matching_story.tertiary_keyword:
+            filtered_stories = by_secondary.filter(tertiary_keyword=matching_story.tertiary_keyword)
+    return story_dump(filtered_stories)
