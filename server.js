@@ -83,6 +83,8 @@ function sendCityRequestMessage(phoneNumber) {
     });
 }
 
+getStoryList(91);
+
 function getStoryList(phone) {
     var countrycode = phone;
 
