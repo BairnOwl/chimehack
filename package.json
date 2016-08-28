@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/BairnOwl/chimehack/issues"
   },
-  "homepage": "https://github.com/BairnOwl/chimehack#readme"
+  "homepage": "https://github.com/BairnOwl/chimehack#readme",
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
 }
