@@ -94,6 +94,8 @@ function getStoryList(phone) {
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
+                console.log(data);
+
                 return data;
             }
         }, false);
