@@ -7,19 +7,10 @@ import models, utils
 
 # Create your views here.
 
-def country_has_zip(request):
+def country_emergency_number(request):
+    country_code = utils.handle_url(request)
     try:
-        content_dict = utils.handle_json(request)
-    except Exception as e:
-        return HttpResponse(content='Incorrect request', reason='JSON would not parse',
-                            reason_phrase=e)
-    try:
-        country_obj = models.Country.objects.get(long_name=content_dict['country'])
+        country_obj = models.Country.objects.get(phone_code=country_code)
     except:
-        try:
-            country_obj = models.Country.objects.get(abbrev_name=content_dict['country'])
-        except:
-            return HttpResponse(content='Incorrect request, could not get country from database',
-                                reason='Could not get country')
-    return HttpResponse(content=json.dumps({'has_postcode': str(country_obj.has_postcode),
-                                            'country': content_dict['country']}))
+        return HttpResponse('Could not get country matching code.')
+    return HttpResponse(country_obj.emergency_number)

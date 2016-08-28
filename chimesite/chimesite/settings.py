@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.config.CommonConfig',
     'apps.config.ResourcesConfig',
     'apps.config.StoriesConfig',
+    'apps.config.UsersConfig',
 ]
 
 MIDDLEWARE = [

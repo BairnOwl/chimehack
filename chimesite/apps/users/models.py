@@ -4,12 +4,11 @@ from django.db import models
 
 # Create your models here.
 
-class BaseUser(models.Model):
-
-    first_name = models.TextField(null=True)
-    last_name = models.TextField(null=True)
-
 class Author(models.Model):
 
-    source_number = models.CharField(max_length=13)
+    alias_name = models.CharField(max_length=200)
+    callback_number = models.CharField(max_length=13)
+
+    def __unicode__(self):
+        return self.alias_name + ": " + self.callback_number
 
