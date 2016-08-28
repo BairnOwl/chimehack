@@ -7,11 +7,11 @@ from django.db import models
 class Country(models.Model):
     long_name = models.TextField()
     abbrev_name = models.CharField(max_length=2)
-    has_postcode = models.BooleanField(default=True)
     default_language = models.TextField(default='English')
+    phone_code = models.IntegerField()
 
-    class Meta():
-        app_label = 'Country Record'
+    def __unicode__(self):
+        return self.long_name
 
 
 class Location(models.Model):
@@ -19,8 +19,13 @@ class Location(models.Model):
     country = models.ForeignKey(Country)
     state = models.TextField()
     district = models.TextField()
-    postal_code = models.CharField(max_length=10)
     city = models.TextField()
 
-    def uses_zip(self):
-        return self.country.has_postcode
+    def loc_detail(self):
+        return self.city
+
+    def __unicode__(self):
+        if self.uses_zip():
+            return '%s: %s, %s' % (str(self.country), self.city, self.postal_code)
+        else:
+            return '%s: %s, %s' % (str(self.country), self.state, self.city)

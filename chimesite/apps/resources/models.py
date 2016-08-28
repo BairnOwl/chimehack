@@ -11,7 +11,4 @@ class Organization(models.Model):
     phone_number = models.CharField(max_length=13)
     location = models.ForeignKey(Location)
     description = models.TextField()
-
-
-class Specialty(models.Model):
-    organization = models.ForeignKey(Organization)
+    services = models.TextField()

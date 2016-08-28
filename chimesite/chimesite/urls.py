@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^resources/', include('apps.resources.urls')),
     url(r'^basic/', include('apps.common.urls')),
+    url(r'^stories/', include('apps.stories.urls')),
 ]
