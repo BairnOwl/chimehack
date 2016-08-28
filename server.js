@@ -110,7 +110,7 @@ app.get('/storytext', function(req, res) {
     var storyid = res.storyid; 
     var storytext = "";
     app.get('/story/' + storyid, function(req, res){
-        storytext = res.storyid //use key to get value i.e. story text    
+        storytext = res.storyid; //use key to get value i.e. story text
     });
     //var story = {"storyid1": "storytext"};
     res.send(storytext);
@@ -157,6 +157,6 @@ app.get('/localorgs', function(req, res) {
 }); 
 
 
-app.listen(3000, function () {
-    console.log('HerStory app listening on port ' + 3000);
+app.listen(process.env.port, function () {
+    console.log('HerStory app listening on port ' + process.env.port);
 });
