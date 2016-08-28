@@ -33,7 +33,7 @@ app.post('/incoming', function(req, res) {
 
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
-            var stories = getStoryList(phoneNumber);
+            var stories = getStoryList(91);
             console.log(stories);
             rememberUserState(phoneNumber, 'stories');
 
