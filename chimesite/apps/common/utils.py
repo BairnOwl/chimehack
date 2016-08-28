@@ -4,7 +4,7 @@ class ContentException(Exception):
     pass
 
 def handle_json(input_request):
-    json_str = input_request.content
+    json_str = input_request.body
     try:
         json.dumps(json_str)
     except Exception as e:
