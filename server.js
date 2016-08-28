@@ -7,7 +7,6 @@ var authToken = '6b7dfc77a039c8d60461a562441fdeb0';   // Your Auth Token from ww
 
 var twilio = require('twilio');
 var client = new twilio.RestClient(accountSid, authToken);
-
 var express = require('express');
 var app = express();
 
@@ -19,16 +18,15 @@ app.use(bodyParser.json());
 
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
-    var message = req.body.Body;
+    var message = isNaN(parseInt(req.body.Body)) ? str.toLowerCase(req.body.Body) : parseInt(req.body.Body);
 
     console.log(message);
 
     if (message == 'her') {
-        console.log("in her");
         sendIntroMessage(phoneNumber);
     }
-
 });
+
 
 function sendIntroMessage(phoneNumber) {
     client.messages.create({
@@ -73,22 +71,46 @@ app.get('/storytext', function(req, res) {
     res.send(storytext);
 });
 
-app.get('/similarstory', function(req, res) {
-    //make call to django app
-    var similarstory = {"1": "snippet1", "2": "snippet2", "3": "snippet3"};
-  res.send();
+app.get('/similar', function(req, res) {
+    var storyid = res.storyid; 
+    var similarlist;
+    app.get('/similarstory/' + storyid, function(req, res)){
+        //may have to send only 3 stories
+        similarlist = res;
+    });
+    res.send(similarlist);
 });
 
 app.get('/matching', function(req, res) {
-    //make call to django app
-    var similarstory = {"1": "snippet1", "2": "snippet2", "3": "snippet3"};
-  res.send('Hello World!');
+    var countrycode = res.countrycode; 
+    var orglist;
+    app.get('/matchorg', function(request, response)){
+        //may have to only send 3 orgs
+        orglist = response;
+    });
+    res.send(orglist);
 });
 
-app.get('/orginfo', function(req, res) {
+app.get('/org', function(req, res) {
+    var orgid = res.orgid;
+    var orginfo;
+    app.get('/orginfo', function(request, response)){
+        orginfo = response;
+    }
     //make call to django app
-  res.send('Hello World!');
-});
+  res.send(orginfo);
+}); 
+
+app.get('/localorgs', function(req, res) {
+    var orgcity = res.orgcity;
+    var orginfo;
+    app.get('/orginfo/' + orgcity, function(request, response)){
+        orginfo = response;
+    }
+    //make call to django app
+  res.send(orginfo);
+}); 
+
 
 app.listen(process.env.PORT, function () {
     console.log('HerStory app listening on port ' + process.env.PORT);
