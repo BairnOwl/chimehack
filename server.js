@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 var userStates = {};
 // Twilio interface
 
+getStoryList(91);
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
     var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
@@ -88,10 +89,13 @@ function getStoryList(phone) {
     var countrycode = phone;
 
     console.log(phone);
+    
+    
 
     app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res) {
+        console.log("in django")
         console.log(res);
-        res.send();
+        req.send("hello world");
     });
 
     // var req = new XMLHttpRequest();
@@ -106,6 +110,12 @@ function getStoryList(phone) {
     // }, false);
     // req.send(null);
 }
+
+app.use(function(err, req, res, next) {
+  // Do logging and user-friendly error message display
+  console.error(err);
+  res.status(500).send({status:500, message: 'internal error', type:'internal'}); 
+})
 
 function getStoryText(storyid) {
     app.get('/storytext', function(req, res) {
