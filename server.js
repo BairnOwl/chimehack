@@ -23,8 +23,6 @@ app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
     var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
 
-    console.log(message);
-
     if (message == 'her') {
         sendIntroMessage(phoneNumber);
         rememberUserState(phoneNumber, 'intro');
@@ -33,6 +31,9 @@ app.post('/incoming', function(req, res) {
 
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
+            var stories = getStoryList(91);
+            //console.log(stories);
+            rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
             // get national orgs
@@ -84,31 +85,38 @@ function sendCityRequestMessage(phoneNumber) {
 
 
 function getStoryList(phone) {
-    app.get('/list', function(request, response) {
-        var countrycode = phone;
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return response.json(data);
-            }
-        }, false);
-        req.send(null);
-    });
-}
+    var countrycode = phone;
 
+    console.log(phone);
+
+    app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res) {
+        console.log(res);
+        res.send();
+    });
+
+    // var req = new XMLHttpRequest();
+    // req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
+    // req.addEventListener('load', function(e) {
+    //     if (req.status == 200) {
+    //         var data = JSON.parse(req.responseText);
+    //         console.log(data);
+    //
+    //         return data;
+    //     }
+    // }, false);
+    // req.send(null);
+}
 
 function getStoryText(storyid) {
     app.get('/storytext', function(req, res) {
         var storyid = storyid;
         var storytext = "";
         req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/single/' + storyid, true);
+        req.open('GET', 'http://127.0.0.1:8000/stories/TO DO FILL OUT/', true);
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
-                return response.json(data);
+                return data;
             }
         }, false);
         req.send(null);
@@ -120,11 +128,11 @@ function getSimilarStory(storyid) {
         var storyid = storyid;
         var storytext = "";
         req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/stories/similar/' + storyid, true);
+        req.open('GET', 'http://127.0.0.1:8000/stories/SIMILAR STORY/', true);
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
-                return response.json(data);
+                return data;
             }
         }, false);
         req.send(null);
@@ -139,7 +147,7 @@ function getMatchingOrg(phone) {
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
-                return response.json(data);
+                return data;
             }
         }, false);
         req.send(null);
@@ -154,7 +162,7 @@ function getOrgAdditional(orgid) {
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
-                return response.json(data);
+                return data;
             }
         }, false);
         req.send(null);
@@ -169,14 +177,13 @@ function getOrgsInCity(city) {
         req.addEventListener('load', function(e) {
             if (req.status == 200) {
                 var data = JSON.parse(req.responseText);
-                return response.json(data);
+                return data;
             }
         }, false);
         req.send(null);
     });
 }
 
-
-app.listen(3000, function() {
-    console.log('HerStory app listening on port ' + 3000);
+app.listen(process.env.PORT, function () {
+    console.log('HerStory app listening on port ' + process.env.PORT);
 });
