@@ -88,17 +88,22 @@ function getStoryList(phone) {
     var countrycode = phone;
 
     console.log(phone);
-    var req = new XMLHttpRequest();
-    req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
-    req.addEventListener('load', function(e) {
-        if (req.status == 200) {
-            var data = JSON.parse(req.responseText);
-            console.log(data);
 
-            return data;
-        }
-    }, false);
-    req.send(null);
+    app.get('http://127.0.0.1:8000/stories/list/' + countrycode, function(req, res) {
+        console.log(res);
+    });
+
+    // var req = new XMLHttpRequest();
+    // req.open('GET', 'http://127.0.0.1:8000/stories/list/' + countrycode, true);
+    // req.addEventListener('load', function(e) {
+    //     if (req.status == 200) {
+    //         var data = JSON.parse(req.responseText);
+    //         console.log(data);
+    //
+    //         return data;
+    //     }
+    // }, false);
+    // req.send(null);
 }
 
 function getStoryText(storyid) {
