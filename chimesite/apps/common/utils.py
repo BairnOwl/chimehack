@@ -15,3 +15,10 @@ def to_three(in_set):
     if len(in_set) > 3:
         in_set = random.sample(in_set, 3)
     return in_set
+
+def filter_down(object_set, parameter, value):
+    if len(object_set) > 3 and value:
+        new_set = object_set.filter(parameter=value)
+        if len(new_set) >= 3:
+            object_set = new_set
+    return object_set
