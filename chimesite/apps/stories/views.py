@@ -20,15 +20,12 @@ def list_stories(request):
     return story_dump(country_stories)
 
 def _retrieve_story(request):
-    in_dict = utils.handle_json(request)
-    story_id = in_dict.get('story_id', None)
-    if story_id is None:
-        return HttpResponse('No story id was given.')
+    story_id = utils.handle_url(request)
     try:
         story = SimpleStory.objects.get(id=story_id)
+        return story
     except:
         return HttpResponse('No story matching the given id exists.')
-
 
 def get_story(request):
     story = _retrieve_story(request)
