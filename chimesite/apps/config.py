@@ -2,15 +2,15 @@ from django.apps import AppConfig
 
 
 class WritersConfig(AppConfig):
-    name = 'users'
+    name = 'apps.users'
 
 
 class StoriesConfig(AppConfig):
-    name = 'stories'
+    name = 'apps.stories'
 
 
 class ResourcesConfig(AppConfig):
-    name = 'resources'
+    name = 'apps.resources'
 
 class CommonConfig(AppConfig):
-    name = 'common'
+    name = 'apps.common'

@@ -2,7 +2,7 @@ import json
 
 from django.http import HttpResponse
 
-from apps.common import models, utils
+import models, utils
 
 
 # Create your views here.
