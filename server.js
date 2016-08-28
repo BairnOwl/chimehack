@@ -16,7 +16,7 @@ app.get('/home', function(request, response){
    response.send("hellooooooooo world"); 
 });
 
-/*
+
 app.get('/welcome', function(request, response){
    var welcomejson = {"read": "text for reading stories", "resources": "get resources"}; 
     response.send(welcomejson);
@@ -57,4 +57,4 @@ app.get('/matching', function(req, res) {
 app.get('/orginfo', function(req, res) {
     //make call to django app
   res.send('Hello World!');
-}); */
+}); 
