@@ -16,19 +16,46 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+var userStates = {};
 // Twilio interface
 
 app.post('/incoming', function(req, res) {
     var phoneNumber = req.body.From;
-    var message = isNaN(parseInt(req.body.Body)) ? str.toLowerCase(req.body.Body) : parseInt(req.body.Body);
+    var message = isNaN(parseInt(req.body.Body)) ? req.body.Body.toLowerCase() : parseInt(req.body.Body);
 
     console.log(message);
 
     if (message == 'her') {
         sendIntroMessage(phoneNumber);
+        rememberUserState(phoneNumber, 'intro');
+
     }
+
+    if (getUserState(phoneNumber) == 'intro') {
+        if (message == 1) {
+
+        } else if (message == 2) {
+            // get national orgs
+            sendCityRequestMessage(phoneNumber);
+            rememberUserState(phoneNumber, 'resources');
+        }
+    }
+
+    if (getUserState(phoneNumber) == 'resources') {
+        // get local orgs
+        
+    }
+
+
 });
 
+function rememberUserState(phoneNumber, state) {
+    userStates[phoneNumber] = state;
+}
+
+function getUserState(phoneNumber) {
+    return userStates[phoneNumber];
+}
 
 function sendIntroMessage(phoneNumber) {
     client.messages.create({
@@ -43,9 +70,17 @@ function sendIntroMessage(phoneNumber) {
     });
 }
 
-app.get('/home', function(request, response) {
-    response.send("hellooooooooo world");
-});
+function sendCityRequestMessage(phoneNumber) {
+    client.messages.create({
+        body: 'Can you please tell me what city you are in so I can find you local resources? I won’t share this with anyone.',
+        to: phoneNumber,
+        from: '+14017533904'
+    }, function (err, message) {
+        if (err) {
+            console.error(err.message);
+        }
+    });
+}
 
 
 app.get('/welcome', function(request, response) {
