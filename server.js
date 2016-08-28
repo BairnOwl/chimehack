@@ -122,7 +122,7 @@ function getSimilarStory(storyid) {
 
 function getMatchingOrg(phone) {
     var countrycode = phone;
-    request('http://127.0.0.1:8000/resources/matchorg/' + countrycode, function(error, res, body) {
+    request('http://127.0.0.1:8000/resources/matchorg/?country=' + countrycode, function(error, res, body) {
     if (!error && res.statusCode == 200) {
         return body;
         }
@@ -131,7 +131,7 @@ function getMatchingOrg(phone) {
 
 function getOrgAdditional(orgid) {
     var id = orgid;
-    request('http://127.0.0.1:8000/resources/orginfo/' + id, function(error, res, body) {
+    request('http://127.0.0.1:8000/resources/info/' + id, function(error, res, body) {
     if (!error && res.statusCode == 200) {
         return body;
         }
@@ -139,17 +139,11 @@ function getOrgAdditional(orgid) {
 }
 
 function getOrgsInCity(city) {
-    app.get('/localorgs', function(req, res) {
-        var orgcity = city;
-        req = new XMLHttpRequest();
-        req.open('GET', 'http://127.0.0.1:8000/resources/LOCAL ORGS/', true);
-        req.addEventListener('load', function(e) {
-            if (req.status == 200) {
-                var data = JSON.parse(req.responseText);
-                return data;
-            }
-        }, false);
-        req.send(null);
+    var orgcity = city;
+    request('http://127.0.0.1:8000/resources/matchorg/?city=' + orgcity, function(error, res, body) {
+    if (!error && res.statusCode == 200) {
+        return body;
+        }
     });
 }
 
