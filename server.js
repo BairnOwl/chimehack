@@ -220,17 +220,7 @@ function getStoryList(phone) {
 
     console.log(countrycode);
 
-<<<<<<< HEAD
     return {"1": "She was beaten by her husband but strangers helped her divorce and find shelter\u2026", "3": "She almost lost both her children to domestic violence but NGOs helped her divorce and get custody", "4": "She was raped by a stranger and her husband stood by her\u2026"};
-=======
-    return new Promise(function(resolve, reject) {
-        request('http://chimehack-herstory.appspot.com/stories/list/' + countrycode, function(error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
->>>>>>> fe4b8aa5cb750556cad1b47d19430a578f42e032
 }
 
 app.use(function(err, req, res, next) {
@@ -240,16 +230,7 @@ app.use(function(err, req, res, next) {
 });
 
 function getStoryText(storyid) {
-    var storyid = storyid;
-    var storytext = "";
-
-    return new Promise(function(resolve, reject) {
-        request('http://chimehack-herstory.appspot.com/stories/single/' + storyid, function (error, res, body) {
-            if (!error && res.statusCode == 200) {
-                resolve(body);
-            }
-        });
-    });
+    return "Urmila, a Dalit woman who hails from a small village in Madhya Pradesh, was living a normal life with her husband and three kids when one day a man broke into her house when she was alone and raped her. She somehow managed to escape and went to the police station where no one filed her complaint till morning. She then went to Harijan\u2019s police station, and after a few hours, her complaint was registered. Since then, her life completely changed. The society blamed her and the neighbors and community cut off all communication with her family. She decided to fight back, and with her husband\u2019s support, she managed to stand tall even in the most difficult situations. The criminals pressurized her to take the police complaint back, they even beat up Urmila and her husband brutally, but she faced them bravely. Urmila is an inspiring example of how, no matter where you are and which community you belong to, you should never be afraid to raise your voice against wrong.";
 }
 
 function getSimilarStory(storyid) {
