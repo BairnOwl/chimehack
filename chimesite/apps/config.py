@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class WritersConfig(AppConfig):
+class UsersConfig(AppConfig):
     name = 'apps.users'
 
 
