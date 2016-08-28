@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var request = require('request');
+var Promise = require('promise');
 
 var userStates = {};
 
@@ -30,25 +31,53 @@ app.post('/incoming', function(req, res) {
     if (message == 'her') {
         sendIntroMessage(phoneNumber);
         rememberUserState(phoneNumber, 'intro');
+    }
 
+    if (isNaN(message) && message == 0) {
+        sendIntroMessage(phoneNumber);
+        rememberUserState(phoneNumber, 'intro');
     }
 
     if (getUserState(phoneNumber) == 'intro') {
         if (message == 1) {
-            var stories = getStoryList(91);
-            console.log(stories);
+            getStoryList(91).then(function(val) {
+                console.log(val);
+                sendStoryListMessage(phoneNumber, val);
+            });
+
             rememberUserState(phoneNumber, 'stories');
 
         } else if (message == 2) {
-            // get national orgs
+            getMatchingOrg(91).then(function(val) {
+                sendMatchingOrgMessage(phoneNumber, val);
+            });
             sendCityRequestMessage(phoneNumber);
             rememberUserState(phoneNumber, 'resources');
         }
     }
 
     if (getUserState(phoneNumber) == 'resources') {
-        // get local orgs
-        
+        getOrgsInCity(message);
+        rememberUserState('resourceList');
+    }
+
+    if (getUserState(phoneNumber) == 'resourceList') {
+        if (isNaN(message)) {
+            getOrgAdditional(message);
+        }
+    }
+
+    if (getUserState(phoneNumber) == 'stories') {
+        if (isNaN(message)) {
+            getStoryText(message);
+            rememberUserState('storyDetail');
+        }
+    }
+
+    if (getUserState(phoneNumber) == 'storyDetail') {
+        if (isNaN(message)) {
+            getSimilarStory(message);
+        }
     }
 });
 
@@ -62,8 +91,7 @@ function getUserState(phoneNumber) {
 
 function sendIntroMessage(phoneNumber) {
     client.messages.create({
-        body: 'I\'m here to help. I won\'t share any personal information that you share with me. ' +
-            'Other women have gone through this.\nPress\n(1) to read their stories\n(2) to find local resources',
+        body: 'You came to the right place. We want you to know you are not alone. Other women have gone through this...\nPress\n(1) to read their stories\n(2) to find local resources',
         to: phoneNumber,
         from: '+14017533904'
     }, function(err, message) {
@@ -85,12 +113,57 @@ function sendCityRequestMessage(phoneNumber) {
     });
 }
 
+function sendStoryListMessage(phoneNumber, stories) {
+    for (var key in stories) {
+        client.messages.create({
+            body: stories[key] + '...Press [' + key + '] to read her story.',
+            to: phoneNumber,
+            from: '+14017533904'
+        }, function (err, message) {
+            if (err) {
+                console.error(err.message);
+            }
+        });
+    }
+}
+
+function sendMatchingOrgMessage(phoneNumber, list) {
+    for (var key in list) {
+        client.messages.create({
+            body: list[key],
+            to: phoneNumber,
+            from: '+14017533904'
+        }, function (err, message) {
+            if (err) {
+                console.error(err.message);
+            }
+        });
+    }
+}
+
 function getStoryList(phone) {
     var countrycode = phone;
-    request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
-        if (!error && res.statusCode == 200) {
-            return body;
-        }
+
+    console.log(countrycode);
+
+    return new Promise(function(resolve, reject) {
+        request('http://localhost:8000/stories/list/' + countrycode, function(error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
+    });
+}
+
+
+function getStoryText(storyid) {
+
+    return new Promise(function(resolve, reject) {
+        request('http://localhost:8000/stories/single/' + countrycode, function(error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
     });
 }
 
@@ -98,7 +171,7 @@ app.use(function(err, req, res, next) {
   // Do logging and user-friendly error message display
   console.error(err);
   res.status(500).send({status:500, message: 'internal error', type:'internal'}); 
-})
+});
 
 function getStoryText(storyid) {
     var storyid = storyid;
@@ -108,9 +181,83 @@ function getStoryText(storyid) {
             return body;
         }
     });
+
+    // app.get('/storytext', function(req, res) {
+    //     var storyid = storyid;
+    //     var storytext = "";
+    //     req = new XMLHttpRequest();
+    //     req.open('GET', 'http://127.0.0.1:8000/stories/TO DO FILL OUT/', true);
+    //     req.addEventListener('load', function(e) {
+    //         if (req.status == 200) {
+    //             var data = JSON.parse(req.responseText);
+    //             return data;
+    //         }
+    //     }, false);
+    //     req.send(null);
+    // });
 }
 
 function getSimilarStory(storyid) {
+
+    // app.get('/similar', function(req, res) {
+    //     var storyid = storyid;
+    //     var storytext = "";
+    //     req = new XMLHttpRequest();
+    //     req.open('GET', 'http://127.0.0.1:8000/stories/SIMILAR STORY/', true);
+    //     req.addEventListener('load', function(e) {
+    //         if (req.status == 200) {
+    //             var data = JSON.parse(req.responseText);
+    //             return data;
+    //         }
+    //     }, false);
+    //     req.send(null);
+    // });
+}
+
+function getMatchingOrg(phone) {
+    // app.get('/matching', function(req, res) {
+    //     var countrycode = phone;
+    //     req = new XMLHttpRequest();
+    //     req.open('GET', 'http://127.0.0.1:8000/stories/MATCH ORG/', true);
+    //     req.addEventListener('load', function(e) {
+    //         if (req.status == 200) {
+    //             var data = JSON.parse(req.responseText);
+    //             return data;
+    //         }
+    //     }, false);
+    //     req.send(null);
+    // });
+}
+
+function getOrgAdditional(orgid) {
+    // app.get('/org', function(req, res) {
+    //     var orgid = orgid;
+    //     req = new XMLHttpRequest();
+    //     req.open('GET', 'http://127.0.0.1:8000/stories/ORG INFO/', true);
+    //     req.addEventListener('load', function(e) {
+    //         if (req.status == 200) {
+    //             var data = JSON.parse(req.responseText);
+    //             return data;
+    //         }
+    //     }, false);
+    //     req.send(null);
+    // });
+}
+
+function getOrgsInCity(city) {
+    // app.get('/localorgs', function(req, res) {
+    //     var orgcity = city;
+    //     req = new XMLHttpRequest();
+    //     req.open('GET', 'http://127.0.0.1:8000/stories/LOCAL ORGS/', true);
+    //     req.addEventListener('load', function(e) {
+    //         if (req.status == 200) {
+    //             var data = JSON.parse(req.responseText);
+    //             return data;
+    //         }
+    //     }, false);
+    //     req.send(null);
+    // });
+
     var storyid = storyid;
     var storytext = "";    
     request('http://127.0.0.1:8000/stories/similar/' + storyid, function(error, res, body) {
@@ -149,4 +296,8 @@ function getOrgsInCity(city) {
 
 app.listen(process.env.PORT, function () {
     console.log('HerStory app listening on port ' + process.env.PORT);
+});
+
+getStoryList(91).then(function(val) {
+    console.log(val)
 });
