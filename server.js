@@ -89,7 +89,7 @@ function sendCityRequestMessage(phoneNumber) {
 function getStoryList(phone) {
     var countrycode = phone;
 
-    country.log(countrycode);
+    console.log(countrycode);
 
     return new Promise(function(resolve, reject) {
         request('http://127.0.0.1:8000/stories/list/' + countrycode, function(error, res, body) {
