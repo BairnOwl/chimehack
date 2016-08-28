@@ -90,14 +90,25 @@ function getUserState(phoneNumber) {
 }
 
 function sendIntroMessage(phoneNumber) {
-    client.messages.create({
-        body: 'You came to the right place. We want you to know you are not alone. Other women have gone through this...\nPress\n(1) to read their stories\n(2) to find local resources',
-        to: phoneNumber,
-        from: '+14017533904'
-    }, function(err, message) {
-        if (err) {
-            console.error(err.message);
-        }
+	getEmergencyNumber(phoneNumber).then(function(number) {
+			client.messages.create({
+			body: 'Im here to help. If this is an emergency or you are not safe, dial this emergency number ' + number,
+			to: phoneNumber,
+			from: '+14017533904'
+		}, function(err, message) {
+			if (err) {
+				console.error(err.message);
+			}
+		});
+		client.messages.create({
+			body: 'I want you to know you are not alone. I wont share any personal information that you give me. Other women have gone through this...\nPress\n(1) to read their stories\n(2) to find local resources',
+			to: phoneNumber,
+			from: '+14017533904'
+		}, function(err, message) {
+			if (err) {
+				console.error(err.message);
+			}
+		});
     });
 }
 
@@ -217,6 +228,18 @@ function getOrgsInCity(city) {
 
     return new Promise(function(resolve, reject) {
         request('http://127.0.0.1:8000/resources/matchorg/?city=' + orgcity, function (error, res, body) {
+            if (!error && res.statusCode == 200) {
+                resolve(body);
+            }
+        });
+    });
+}
+
+function getEmergencyNumber(phone){
+	var countrycode = phone;
+	
+	return new Promise(function(resolve, reject) {
+        request('http://127.0.0.1:8000/basic/emergency/' + orgcity, function (error, res, body) {
             if (!error && res.statusCode == 200) {
                 resolve(body);
             }
