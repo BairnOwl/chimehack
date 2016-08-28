@@ -1,2 +1,2 @@
-python manage.py loadtestdata
+python manage.py loaddata fixtures/initial_data.json
 python manage.py runserver
