@@ -18,15 +18,12 @@ class Country(models.Model):
 class Location(models.Model):
 
     country = models.ForeignKey(Country)
-    state = models.TextField()
-    district = models.TextField()
-    city = models.TextField()
+    state = models.TextField(blank=True, null=True)
+    district = models.TextField(blank=True, null=True)
+    city = models.TextField(blank=True, null=True)
 
     def loc_detail(self):
         return self.city
 
     def __unicode__(self):
-        if self.uses_zip():
-            return '%s: %s, %s' % (str(self.country), self.city, self.postal_code)
-        else:
-            return '%s: %s, %s' % (str(self.country), self.state, self.city)
+        return '%s: %s, %s' % (str(self.country), self.state, self.city)

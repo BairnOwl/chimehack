@@ -36,7 +36,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/Cao/Desktop/hackathons/chimehack/chimehack/chimesite/env"
+set -gx VIRTUAL_ENV "/Users/Cao/Desktop/chime-django/chimesite/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

@@ -3,10 +3,12 @@ from django.http import HttpResponse
 from apps.common import utils
 from models import SimpleStory
 import json
+import random
 
 def story_dump(stories):
+    subset = random.sample(stories, 3)
     story_dump = {}
-    for story in stories:
+    for story in subset:
         story_dump[story.id] = story.snippet
     return HttpResponse(json.dumps(story_dump))
 
