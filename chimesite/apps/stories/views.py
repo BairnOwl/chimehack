@@ -16,7 +16,7 @@ def list_stories(request):
         country_code = int(in_code)
     except:
         return HttpResponse('Could not get country code.')
-    country_stories = SimpleStory.objects.filter(location__country__phone_code=country_code)
+    country_stories = SimpleStory.objects.filter(location__phone_code=country_code)
     return story_dump(country_stories)
 
 def _retrieve_story(request):
