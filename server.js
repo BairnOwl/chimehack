@@ -157,6 +157,6 @@ app.get('/localorgs', function(req, res) {
 }); 
 
 
-app.listen(process.env.port, function () {
-    console.log('HerStory app listening on port ' + process.env.port);
+app.listen(process.env.PORT, function () {
+    console.log('HerStory app listening on port ' + process.env.PORT);
 });
