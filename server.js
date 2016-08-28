@@ -8,8 +8,8 @@ var express = require('express');
 var app = express();
 
 
-app.listen(3000, function () {
-    console.log('HerStory app listening on port ' + 3000);
+app.listen(process.env.PORT, function () {
+    console.log('HerStory app listening on port ' + process.env.PORT);
 });
 
 app.get('/home', function(request, response){
