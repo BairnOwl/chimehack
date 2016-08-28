@@ -83,14 +83,6 @@ function sendCityRequestMessage(phoneNumber) {
 }
 
 
-app.get('/welcome', function(request, response) {
-    var welcomejson = {
-        "read": "text for reading stories",
-        "resources": "get resources"
-    };
-    response.send(welcomejson);
-});
-
 function getStoryList(phone) {
     app.get('/list', function(request, response) {
         var countrycode = phone;
